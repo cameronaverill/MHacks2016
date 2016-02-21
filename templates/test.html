@@ -14,7 +14,23 @@
 
 <body>
 
-    <h1>TEST</h1>
+    <h1>Your Set</h1>
+    <a href="">Create Set on Quizlet</a>
+    <ul>
+    {% block content %}
+
+	    {% for entry in entries.find() %}
+	    	<li>
+	      <p><b>{{ entry.term }}</b></p>
+	      <p>
+	      	{% for definition in entry.definition %}
+	        	{{ definition }}
+	      	{% endfor %}
+	      </p>
+	      </li>
+	    {% endfor %}
+		{% endblock %}
+		</ul>
 </body>
 
 </html>

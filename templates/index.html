@@ -20,9 +20,9 @@
         </div>
 
         <div class="jumbotron">
-            <h1>Crate your own QuizSkim</h1>
+            <h1>Create your own QuizSkim</h1>
             <p class="lead"></p>
-            <form action="." method="POST">
+            <form action="/process" method="POST">
               PDF Link: <input type="text" name="pdfLink"><br>
               Pages (separated by commas): <input type="text" name="pages"><br>
               <a href="{{ url_for('generate') }}"><input type="submit"  value="Skim!" class="btn btn-lg btn-success"></a>

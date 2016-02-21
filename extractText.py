@@ -18,6 +18,8 @@ subprocess.call(["rm", pdfFileName])
 subprocess.call(["mkdir", "myoutput"])
 subprocess.call(["mv", "myfile.html", "myoutput"])
 
+subprocess.call(["python", "process_html.py"])
+
 
 
 #http://mhs.marbleheadschools.org/teachers/heenan/002F66C7-011F79D6.84/Ch%2054%20Campbell%209th%20ed.pdf
