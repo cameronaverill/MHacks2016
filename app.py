@@ -8,6 +8,8 @@ from oauth import OmnAuth
 import ast
 import pycurl, json
 from StringIO import StringIO
+import sys
+from io import BytesIO
 
 from flask.ext.pymongo import PyMongo
 from pymongo import MongoClient
@@ -92,13 +94,19 @@ def auth2():
 	'definitions': definitions,
 	'lang_terms': 'en',
 	'lang_definitions': 'en'})
+	buffer = BytesIO()
 	c = pycurl.Curl()
 	c.setopt(pycurl.URL, post_url)
+	c.setopt(c.WRITEDATA, buffer)
 	c.setopt(pycurl.HTTPHEADER, ['Authorization: Bearer ' + token])
 	c.setopt(pycurl.POSTFIELDS, data)
 	c.perform()
-
-	return redirect("http://quizlet.com" + "/122703621/turtle-flash-cards/")
+	c.close()
+	body = buffer.getvalue()
+	strstart = body.find('url')
+	slashStart = body.find('/\"')
+	strDesired = body[strstart + 6: slashStart]
+	return redirect("http://quizlet.com" + strdesired)
 
 
 
