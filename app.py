@@ -15,7 +15,7 @@ def run_script(id, pages, link):
 def main():
   return render_template('index.html')
 
-@app.route('/', methods=['POST'])
+@app.route("/", methods=['POST'])
 def generate():
 
 	link = request.form['pdfLink']
@@ -24,6 +24,7 @@ def generate():
 	background_scripts[id] = False
 	threading.Thread(target=lambda: run_script(id, pages, link)).start()
 	return render_template('test.html', id=id)
+	# return redirect("http://www.quizlet.com", code=302)
 
 
 
