@@ -81,20 +81,13 @@ def auth2():
 	terms = []
 	definitions = []
 
-	for entry in entries.find():
-		for key in entry:
-			currDefinition = ""
-			terms.append(str(key))
-			# definitions.append(str(entry[key]).encode('utf-8'))
+	for entry in db.entries.find():
+		print entries.count()
+		terms.append(entry["term"])
+		singleDef = '. '.join(entry["definition"])
+		definitions.append(singleDef)
 
-		# cardTerms.append(str(entry.term))
-
-		# definitions.append(str(entries.find()[key]))
-		# for definition in entry.definition:
-		# 	currDefinition + definition + " "
-		definitions.append("hi")
-
-	data = json.dumps({'title': 'YourSet',
+	data = json.dumps({'title': 'Your Set',
 	'terms': terms,
 	'definitions': definitions,
 	'lang_terms': 'en',
