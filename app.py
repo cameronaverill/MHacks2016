@@ -106,7 +106,7 @@ def auth2():
 	strstart = body.find('url')
 	slashStart = body.find('/\"')
 	strDesired = body[strstart + 6: slashStart]
-	return redirect("http://quizlet.com" + strdesired)
+	return redirect("http://quizlet.com" + strDesired)
 
 
 
