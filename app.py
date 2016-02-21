@@ -66,7 +66,7 @@ def auth2():
 	mySecret = 'dEHBPDNqyWt8wtcA7VcdeK'
 	data = {'grant_type': 'authorization_code',
 		'code': code,
-		'redirect_uri': "http://localhost:5032/auth2"
+		'redirect_uri': "http://localhost:5033/auth2"
 		}
 	req = requests.post('https://api.quizlet.com/oauth/token', data=data, auth=(myClientId, mySecret))
 	if req.status_code != 200:
@@ -77,9 +77,26 @@ def auth2():
 	token = receivedPayload['access_token']
 	headers = {"Authorization": token}
 	post_url = "https://api.quizlet.com/2.0/sets"
-	data = json.dumps({'title': 'turtle',
-	'terms': ['dog', 'cat'],
-	'definitions': ['roof', 'meow'],
+
+	terms = []
+	definitions = []
+
+	for entry in entries.find():
+		for key in entry:
+			currDefinition = ""
+			terms.append(str(key))
+			# definitions.append(str(entry[key]).encode('utf-8'))
+
+		# cardTerms.append(str(entry.term))
+
+		# definitions.append(str(entries.find()[key]))
+		# for definition in entry.definition:
+		# 	currDefinition + definition + " "
+		definitions.append("hi")
+
+	data = json.dumps({'title': 'YourSet',
+	'terms': terms,
+	'definitions': definitions,
 	'lang_terms': 'en',
 	'lang_definitions': 'en'})
 	c = pycurl.Curl()
@@ -93,4 +110,4 @@ def auth2():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5032)
+    app.run(debug=True, port=5033)
