@@ -2,8 +2,12 @@ from bs4 import BeautifulSoup
 import subprocess
 import nltk
 from nltk import sent_tokenize, word_tokenize, pos_tag
-import os 
+import os
 from term import Term
+from flask.ext.pymongo import PyMongo
+from pymongo import MongoClient
+from app import db
+
 
 #generate a beautiful soup file for each fil ein the myoutput directory
 file_names = []
@@ -30,18 +34,24 @@ for f in file_names:
 		paragraphs.append(t.parent.get_text())
 		term_and_def[text] = []
 		sents = sent_tokenize(t.parent.get_text())
-		print sents
+		# print sents
 		for s in sents:
 			if text in s:
 				tdef = term_and_def[text]
-				tdef.append(s)
+				tdef.append(s.replace('\n', ' ').replace('- ', ''))
 				term_and_def[text] = tdef
 
-terms = []				
+terms = []
 for t in bold_term_text:
 	terms.append(Term(t, term_and_def[t], 0))
-	print terms[len(terms) - 1].name
-	print terms[len(terms) - 1].bullets
+	entry = {"term" : terms[len(terms) - 1].name,
+					 "definition" : terms[len(terms) - 1].bullets}
+	entry_id = db.entries.insert_one(entry).inserted_id
+
+	# print db.collection.find_one({"_id": entry_id})
+
+	# print terms[len(terms) - 1].name
+	# print terms[len(terms) - 1].bullets
 
 
 subprocess.call(["rm", "-rf", "myoutput"])

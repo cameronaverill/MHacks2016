@@ -1,4 +1,4 @@
-import subprocess;
+import subprocess
 from sys import argv
 import urllib2
 
@@ -17,6 +17,8 @@ subprocess.call(["rm", pdfFileName])
 
 subprocess.call(["mkdir", "myoutput"])
 subprocess.call(["mv", "myfile.html", "myoutput"])
+
+subprocess.call(["python", "process_html.py"])
 
 
 
