@@ -21,7 +21,7 @@ term_and_def = {}
 
 for f in file_names:
 	soup = BeautifulSoup(f, 'html.parser')
-	for t in soup.findAll("span", attrs={'style': 'font-family: HIEILF+StoneSerif-Bold-20-0; font-size:9px'}):
+	for t in soup.findAll("span", attrs={'style': 'font-family: OTQPIH+StoneSerif-Bold; font-size:9px'}):
 		bold_term_tags.append(t)
 		text = t.get_text()
 		bold_term_text.append(text)
