@@ -3,12 +3,13 @@ import threading
 import requests
 import subprocess
 import uuid
-<<<<<<< HEAD
 from flask_oauth import OAuth
 from oauth import OmnAuth
 import ast
 import pycurl, json
 from StringIO import StringIO
+import sys
+from io import BytesIO
 
 from flask.ext.pymongo import PyMongo
 from pymongo import MongoClient
@@ -50,8 +51,11 @@ def generate():
 	id = str(uuid.uuid4())
 	background_scripts[id] = False
 
-	threading.Thread(target=lambda: run_script(id, pdfLink, pages)).start()
-	return render_template('test.html', id=id)
+	t = FuncThread(run_script, id, pages, link)
+	t.start()
+	t.join()
+	print entries.find
+	return render_template('test.html', entries=entries)
 
 @app.route('/auth1')
 def auth1():
@@ -64,7 +68,7 @@ def auth2():
 	mySecret = 'dEHBPDNqyWt8wtcA7VcdeK'
 	data = {'grant_type': 'authorization_code',
 		'code': code, 
-		'redirect_uri': "http://localhost:5032/auth2"
+		'redirect_uri': "http://localhost:5033/auth2"
 		}
 	req = requests.post('https://api.quizlet.com/oauth/token', data=data, auth=(myClientId, mySecret))
 	if req.status_code != 200:
@@ -80,20 +84,21 @@ def auth2():
 	'definitions': ['roof', 'meow'],
 	'lang_terms': 'en',
 	'lang_definitions': 'en'})
+	buffer = BytesIO()
 	c = pycurl.Curl()
 	c.setopt(pycurl.URL, post_url)
+	c.setopt(c.WRITEDATA, buffer)
 	c.setopt(pycurl.HTTPHEADER, ['Authorization: Bearer ' + token])
 	c.setopt(pycurl.POSTFIELDS, data)
 	c.perform()
-	
-	return redirect("http://quizlet.com" + "/122703621/turtle-flash-cards/")
+	c.close()
+	body = buffer.getvalue()
+	strstart = body.find('url')
+	slashStart = body.find('/\"')
+	strDesired = body[strstart + 6: slashStart]
+	return redirect("http://quizlet.com" + strdesired)
 
-	t = FuncThread(run_script, id, pages, link)
-	t.start()
-	t.join()
-	print entries.find
-	return render_template('test.html', entries=entries)
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5032)
+    app.run(debug=True, port=5033)

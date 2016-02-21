@@ -15,7 +15,7 @@ class OmnAuth(object):
 		response_type = 'code'
 		scope = 'read+write_set+write_group'
 		state = '123'
-		redir = "http://localhost:5032/auth2"
+		redir = "http://localhost:5033/auth2"
 		redirect_url = "https://quizlet.com/authorize?response_type=" + response_type + "&client_id=" + self.myClientId + "&scope=" + scope + "&state=" + state + "&redirect_uri=" + redir
 		return redirect_url
 
