@@ -5,12 +5,18 @@ import subprocess
 import uuid
 from flask_oauth import OAuth
 from oauth import OmnAuth
+import ast
+import pycurl, json
+from StringIO import StringIO
 
 app = Flask(__name__)
 
 oauth = OmnAuth()
 
 background_scripts = {}
+
+o = StringIO()
+h = StringIO()
 
 def run_script(id, pages, link):
 	subprocess.call("extractText.py", pages, link)
@@ -43,13 +49,29 @@ def auth2():
 	mySecret = 'dEHBPDNqyWt8wtcA7VcdeK'
 	data = {'grant_type': 'authorization_code',
 		'code': code, 
-		'redirect_uri': "http://localhost:5027/auth2"
+		'redirect_uri': "http://localhost:5032/auth2"
 		}
 	req = requests.post('https://api.quizlet.com/oauth/token', data=data, auth=(myClientId, mySecret))
 	if req.status_code != 200:
 		return "bad request"
-	else:
-		return "good"
+	receivedPayload = ast.literal_eval(req.text)
+	print receivedPayload
+	terms = request.form.getlist(('terms[]'))
+	token = receivedPayload['access_token']
+	headers = {"Authorization": token}
+	post_url = "https://api.quizlet.com/2.0/sets"
+	data = json.dumps({'title': 'turtle',
+	'terms': ['dog', 'cat'], 
+	'definitions': ['roof', 'meow'],
+	'lang_terms': 'en',
+	'lang_definitions': 'en'})
+	c = pycurl.Curl()
+	c.setopt(pycurl.URL, post_url)
+	c.setopt(pycurl.HTTPHEADER, ['Authorization: Bearer ' + token])
+	c.setopt(pycurl.POSTFIELDS, data)
+	c.perform()
+	
+	return redirect("http://quizlet.com" + "/122703621/turtle-flash-cards/")
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5027)
+    app.run(debug=True, port=5032)
