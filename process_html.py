@@ -1,4 +1,5 @@
 from bs4 import BeautifulSoup
+import subprocess
 import nltk
 from nltk import sent_tokenize, word_tokenize, pos_tag
 import os 
@@ -41,3 +42,7 @@ for t in bold_term_text:
 	terms.append(Term(t, term_and_def[t], 0))
 	print terms[len(terms) - 1].name
 	print terms[len(terms) - 1].bullets
+
+
+subprocess.call(["rm", "-rf", "myoutput"])
+
