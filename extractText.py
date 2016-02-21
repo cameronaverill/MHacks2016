@@ -1,4 +1,4 @@
-import subprocess;
+import subprocess
 from sys import argv
 import urllib2
 
