@@ -3,7 +3,6 @@ import threading
 import requests
 import subprocess
 import uuid
-<<<<<<< HEAD
 from flask_oauth import OAuth
 from oauth import OmnAuth
 import ast
@@ -40,7 +39,7 @@ def run_script(id, pages, link):
 def main():
 	pdfLink=""
 	pages =""
-	return render_template('index.html', pdfLink, pages)
+	return render_template('index.html')
 
 @app.route("/process", methods=['POST'])
 def generate():
@@ -50,8 +49,11 @@ def generate():
 	id = str(uuid.uuid4())
 	background_scripts[id] = False
 
-	threading.Thread(target=lambda: run_script(id, pdfLink, pages)).start()
-	return render_template('test.html', id=id)
+	t = FuncThread(run_script, id, pages, link)
+	t.start()
+	t.join()
+	print entries.find
+	return render_template('test.html', entries=entries)
 
 @app.route('/auth1')
 def auth1():
@@ -63,7 +65,7 @@ def auth2():
 	myClientId = 'ZsDq2bcC9e'
 	mySecret = 'dEHBPDNqyWt8wtcA7VcdeK'
 	data = {'grant_type': 'authorization_code',
-		'code': code, 
+		'code': code,
 		'redirect_uri': "http://localhost:5032/auth2"
 		}
 	req = requests.post('https://api.quizlet.com/oauth/token', data=data, auth=(myClientId, mySecret))
@@ -76,7 +78,7 @@ def auth2():
 	headers = {"Authorization": token}
 	post_url = "https://api.quizlet.com/2.0/sets"
 	data = json.dumps({'title': 'turtle',
-	'terms': ['dog', 'cat'], 
+	'terms': ['dog', 'cat'],
 	'definitions': ['roof', 'meow'],
 	'lang_terms': 'en',
 	'lang_definitions': 'en'})
@@ -85,14 +87,9 @@ def auth2():
 	c.setopt(pycurl.HTTPHEADER, ['Authorization: Bearer ' + token])
 	c.setopt(pycurl.POSTFIELDS, data)
 	c.perform()
-	
+
 	return redirect("http://quizlet.com" + "/122703621/turtle-flash-cards/")
 
-	t = FuncThread(run_script, id, pages, link)
-	t.start()
-	t.join()
-	print entries.find
-	return render_template('test.html', entries=entries)
 
 
 if __name__ == "__main__":
